@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmiliaByte</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://files.catbox.moe/1z97xg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(25, 25, 35, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 3px solid #6c5ce7;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(108, 92, 231, 0.3);
+        }
+
+        .subtitle {
+            color: #b2bec3;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .payment-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .payment-option {
+            flex: 1;
+            min-width: 180px;
+            background: rgba(40, 40, 50, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-option:hover {
+            transform: translateY(-5px);
+            background: rgba(50, 50, 65, 0.9);
+            border-color: #6c5ce7;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .payment-option.active {
+            background: rgba(60, 60, 80, 0.9);
+            border-color: #a29bfe;
+            transform: translateY(-5px);
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .payment-icon img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .payment-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .floating-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(25, 25, 35, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+            border: 2px solid #6c5ce7;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            width: 320px;
+        }
+
+        .floating-card.show {
+            opacity: 1;
+            visibility: visible;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .floating-card .payment-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+        }
+
+        .floating-card .payment-name {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .floating-card .payment-number {
+            font-size: 1.3rem;
+            margin: 10px 0;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .copy-btn {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(40, 40, 50, 0.95);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #6c5ce7;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            color: #6c5ce7;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #b2bec3;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .payment-options {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .floating-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://files.catbox.moe/figyvq.jpg" alt="EmiliaByte Logo">
+            </div>
+            <h1>EmiliaByte</h1>
+            <p class="subtitle">Pilih metode pembayaran yang tersedia</p>
+        </header>
+
+        <div class="payment-options">
+            <div class="payment-option" data-method="dana" data-number="0881011892305">
+                <div class="payment-icon">
+                    <img src="https://files.catbox.moe/urdkaj.png" alt="Dana">
+                </div>
+                <div class="payment-name">Dana</div>
+            </div>
+            <div class="payment-option" data-method="gopay" data-number="083872735426">
+                <div class="payment-icon">
+                    <img src="https://files.catbox.moe/jzaem7.png" alt="Gopay">
+                </div>
+                <div class="payment-name">Gopay</div>
+            </div>
+            <div class="payment-option" data-method="shopeepay" data-number="087735073038">
+                <div class="payment-icon">
+                    <img src="https://files.catbox.moe/fxamkq.png" alt="ShopeePay">
+                </div>
+                <div class="payment-name">ShopeePay</div>
+            </div>
+            <div class="payment-option" data-method="seabank" data-number="901019568318">
+                <div class="payment-icon">
+                    <img src="https://files.catbox.moe/lzg4s8.png" alt="SeaBank">
+                </div>
+                <div class="payment-name">SeaBank</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-card" id="floatingCard">
+        <div class="payment-icon">
+            <img id="floatingIcon" src="" alt="">
+        </div>
+        <div class="payment-name" id="floatingName"></div>
+        <div class="payment-number" id="floatingNumber"></div>
+        <button class="copy-btn" id="floatingCopyBtn">
+            <i class="fas fa-copy"></i> Salin Nomor
+        </button>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <footer>
+        <p>© EmiliaByte 2025</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            const floatingCard = document.getElementById('floatingCard');
+            const floatingIcon = document.getElementById('floatingIcon');
+            const floatingName = document.getElementById('floatingName');
+            const floatingNumber = document.getElementById('floatingNumber');
+            const floatingCopyBtn = document.getElementById('floatingCopyBtn');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    paymentOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Get payment details
+                    const method = this.getAttribute('data-method');
+                    const number = this.getAttribute('data-number');
+                    const icon = this.querySelector('img').src;
+                    const name = this.querySelector('.payment-name').textContent;
+                    
+                    // Update floating card
+                    floatingIcon.src = icon;
+                    floatingName.textContent = name;
+                    floatingNumber.textContent = number;
+                    floatingCard.classList.add('show');
+                    
+                    // Add event listener to the floating card copy button
+                    floatingCopyBtn.onclick = function() {
+                        copyToClipboard(number, method);
+                    };
+                });
+            });
+            
+            function copyToClipboard(number, method) {
+                navigator.clipboard.writeText(number).then(() => {
+                    // Show toast notification
+                    toastMessage.textContent = `Nomor ${method.charAt(0).toUpperCase() + method.slice(1)} Berhasil Disalin`;
+                    toast.classList.add('show');
+                    
+                    // Hide toast after 3 seconds
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
+                });
+            }
+            
+            // Close floating card when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!floatingCard.contains(event.target) && !event.target.closest('.payment-option')) {
+                    floatingCard.classList.remove('show');
+                    paymentOptions.forEach(opt => opt.classList.remove('active'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
